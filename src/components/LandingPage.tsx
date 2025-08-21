@@ -79,12 +79,12 @@ export default function LandingPage({ children }: LandingPageProps) {
                 Stop Losing Money. <br className="hidden md:block" />
                 <span className="bg-gradient-to-r from-accent-400 to-accent-600 bg-clip-text text-transparent">
                   
-                </span>Master Trading Like a Pro.
+                </span>Master Options Trading Like a Pro.
               </h1>
               <p className="text-lg md:text-xl lg:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto">
                 95% of retail traders lose money. Don't be a statistic. Practice your strategies with 
                 <span className="text-accent-400 font-semibold"> ₹10 Lakhs virtual funds</span> and 
-                <span className="text-secondary-400 font-semibold"> real-time market data</span>—completely risk-free.
+                <span className="text-secondary-400 font-semibold"> real-time Option Chain data</span>—completely risk-free.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link 
@@ -112,7 +112,7 @@ export default function LandingPage({ children }: LandingPageProps) {
           <div className="container mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-5xl font-bold mb-4">
-                The Ultimate <span className="text-accent-400">Trading Playground</span>
+                The Ultimate <span className="text-accent-400">F&O Trading Playground</span>
               </h2>
               <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
                 Everything you need to build confidence, test strategies, and sharpen your trading edge.
@@ -127,7 +127,7 @@ export default function LandingPage({ children }: LandingPageProps) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">Live Market Data</h3>
+                <h3 className="text-xl font-bold text-white mb-3">Live Option chain Data</h3>
                 <p className="text-gray-300">Trade with real-time NSE quotes. Experience authentic market volatility and price action without risking a single rupee.</p>
               </div>
 
