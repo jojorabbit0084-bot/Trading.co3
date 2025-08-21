@@ -1,4 +1,4 @@
-# Trading Platform MVP
+# Trading Platform MVP - c03
 
 A modern, responsive full-stack trading platform built with Next.js, Supabase, and TailwindCSS. This application provides a complete trading experience with portfolio management, transaction tracking, and real-time analytics.
 
