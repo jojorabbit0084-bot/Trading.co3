@@ -11,10 +11,13 @@ export default function LandingPage() {
       {/* Header */}
       <header className="bg-white/10 backdrop-blur-md sticky top-0 z-50 border-b border-white/20">
         <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-          <Link href="#" className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent">
-            TradeMaster
-          </Link>
-          
+          {/* Brand Logo with Glossy Shine */}
+    <Link 
+  href="#" 
+  className="relative text-3xl font-extrabold bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 bg-clip-text text-transparent drop-shadow-lg overflow-hidden animate-shine-text"
+>
+  TradeDemos
+</Link>          
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <a href="#features" className="text-gray-300 hover:text-white transition-colors">Features</a>
@@ -74,7 +77,7 @@ export default function LandingPage() {
                 href="/signup" 
                 className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-bold text-lg px-8 py-4 rounded-lg hover:from-primary-600 hover:to-secondary-600 transition-all duration-300 transform hover:scale-105 shadow-lg animate-bounce-subtle"
               >
-                Get Your Free ₹10L Demo Account
+                Pre-register for Free ₹10L Demo Account
               </Link>
               <Link 
                 href="/login" 
