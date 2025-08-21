@@ -41,7 +41,7 @@ export default function HomePage() {
   const userName = user.user_metadata?.full_name || user.email;
 
   return (
-    <LandingPage>
+    <LandingPage user={user}>
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-150px)] text-white text-center px-6">
         <h1 className="text-4xl md:text-5xl font-extrabold leading-tight mb-6 bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent animate-fade-in">
           Welcome, {userName}!

@@ -5,10 +5,13 @@ import { useState, ReactNode } from 'react';
 
 interface LandingPageProps {
   children?: ReactNode;
+  user?: any; // Add user prop
 }
 
-export default function LandingPage({ children }: LandingPageProps) {
+export default function LandingPage({ children, user }: LandingPageProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const userName = user?.user_metadata?.full_name || user?.email;
 
   return (
     <div className="min-h-screen bg-gradient-dark text-white">
@@ -18,22 +21,32 @@ export default function LandingPage({ children }: LandingPageProps) {
           {/* Brand Logo with Glossy Shine */}
     <Link 
   href="#" 
-  className="relative text-3xl font-extrabold bg-gradient-to-r from-gray-200 via-white to-gray-300 bg-clip-text text-transparent overflow-hidden animate-shine-text antialiased subpixel-antialiased"
+  className="relative text-3xl font-extrabold bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 bg-clip-text text-transparent drop-shadow-lg overflow-hidden animate-shine-text"
 >
-  TradingSim
+  TradeDemos
 </Link>          
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <a href="#features" className="text-gray-300 hover:text-white transition-colors">Features</a>
             <a href="#how-it-works" className="text-gray-300 hover:text-white transition-colors">How It Works</a>
             <a href="#testimonials" className="text-gray-300 hover:text-white transition-colors">Reviews</a>
-            <Link href="/login" className="text-gray-300 hover:text-white transition-colors">Login</Link>
-            <Link href="/signup" className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-semibold px-6 py-2.5 rounded-lg hover:from-primary-600 hover:to-secondary-600 transition-all duration-300 transform hover:scale-105">
-              Start Trading Free
-            </Link>
-            <Link href="/signup" className="bg-gradient-to-r from-accent-500 to-danger text-white font-semibold px-6 py-2.5 rounded-lg hover:from-accent-600 hover:to-danger-600 transition-all duration-300 transform hover:scale-105">
-              REGISTER
-            </Link>
+            {!user && (
+              <>
+                <Link href="/login" className="text-gray-300 hover:text-white transition-colors">Login</Link>
+                <Link href="/signup" className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-semibold px-6 py-2.5 rounded-lg hover:from-primary-600 hover:to-secondary-600 transition-all duration-300 transform hover:scale-105">
+                  Start Trading Free
+                </Link>
+                <Link href="/signup" className="bg-gradient-to-r from-accent-500 to-danger text-white font-semibold px-6 py-2.5 rounded-lg hover:from-accent-600 hover:to-danger-600 transition-all duration-300 transform hover:scale-105">
+                  REGISTER
+                </Link>
+              </>
+            )}
+            {user && (
+              <div className="flex items-center space-x-4">
+                <span className="text-gray-300">Logged in as: {userName}</span>
+                <Link href="/profile" className="text-gray-300 hover:text-white transition-colors">Edit Profile</Link>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -54,13 +67,23 @@ export default function LandingPage({ children }: LandingPageProps) {
               <a href="#features" className="block text-gray-300 hover:text-white transition-colors">Features</a>
               <a href="#how-it-works" className="block text-gray-300 hover:text-white transition-colors">How It Works</a>
               <a href="#testimonials" className="block text-gray-300 hover:text-white transition-colors">Reviews</a>
-              <Link href="/login" className="block text-gray-300 hover:text-white transition-colors">Login</Link>
-              <Link href="/signup" className="block bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-semibold px-6 py-2.5 rounded-lg text-center">
-                Start Trading Free
-              </Link>
-              <Link href="/signup" className="block bg-gradient-to-r from-accent-500 to-danger text-white font-semibold px-6 py-2.5 rounded-lg text-center">
-                REGISTER
-              </Link>
+              {!user && (
+                <>
+                  <Link href="/login" className="block text-gray-300 hover:text-white transition-colors">Login</Link>
+                  <Link href="/signup" className="block bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-semibold px-6 py-2.5 rounded-lg text-center">
+                    Start Trading Free
+                  </Link>
+                  <Link href="/signup" className="block bg-gradient-to-r from-accent-500 to-danger text-white font-semibold px-6 py-2.5 rounded-lg text-center">
+                    REGISTER
+                  </Link>
+                </>
+              )}
+              {user && (
+                <>
+                  <span className="block text-gray-300">Logged in as: {userName}</span>
+                  <Link href="/profile" className="block text-gray-300 hover:text-white transition-colors">Edit Profile</Link>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -117,56 +140,56 @@ export default function LandingPage({ children }: LandingPageProps) {
               <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
                 Everything you need to build confidence, test strategies, and sharpen your trading edge.
               </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Feature 1 */}
+            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
+              <div className="bg-gradient-to-br from-primary-500 to-secondary-500 p-3 rounded-full w-16 h-16 mb-6 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">Live Market Data</h3>
+              <p className="text-gray-300">Trade with real-time NSE quotes. Experience authentic market volatility and price action without risking a single rupee.</p>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {/* Feature 1 */}
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
-                <div className="bg-gradient-to-br from-primary-500 to-secondary-500 p-3 rounded-full w-16 h-16 mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Live Market Data</h3>
-                <p className="text-gray-300">Trade with real-time NSE quotes. Experience authentic market volatility and price action without risking a single rupee.</p>
-              </div>
 
-              {/* Feature 2 */}
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
-                <div className="bg-gradient-to-br from-success to-accent-500 p-3 rounded-full w-16 h-16 mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">₹10 Lakh Risk-Free Capital</h3>
-                <p className="text-gray-300">Start with virtual funds. Learn from mistakes, perfect your entries, and manage positions like a professional trader.</p>
+            {/* Feature 2 */}
+            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
+              <div className="bg-gradient-to-br from-success to-accent-500 p-3 rounded-full w-16 h-16 mb-6 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
               </div>
+              <h3 className="text-xl font-bold text-white mb-3">₹10 Lakh Risk-Free Capital</h3>
+              <p className="text-gray-300">Start with virtual funds. Learn from mistakes, perfect your entries, and manage positions like a professional trader.</p>
+            </div>
 
-              {/* Feature 3 */}
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
-                <div className="bg-gradient-to-br from-secondary-500 to-primary-600 p-3 rounded-full w-16 h-16 mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.172V5L8 4z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Advanced Strategy Testing</h3>
-                <p className="text-gray-300">From simple calls/puts to complex spreads, straddles, and iron condors. Test everything before deploying real capital.</p>
+            {/* Feature 3 */}
+            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
+              <div className="bg-gradient-to-br from-secondary-500 to-primary-600 p-3 rounded-full w-16 h-16 mb-6 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.172V5L8 4z" />
+                </svg>
               </div>
+              <h3 className="text-xl font-bold text-white mb-3">Advanced Strategy Testing</h3>
+              <p className="text-gray-300">From simple calls/puts to complex spreads, straddles, and iron condors. Test everything before deploying real capital.</p>
+            </div>
 
-              {/* Feature 4 */}
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
-                <div className="bg-gradient-to-br from-accent-500 to-danger p-3 rounded-full w-16 h-16 mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Deep Analytics</h3>
-                <p className="text-gray-300">Track performance with detailed P&L reports. Understand win ratios, identify patterns, and optimize your trading approach.</p>
+            {/* Feature 4 */}
+            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
+              <div className="bg-gradient-to-br from-accent-500 to-danger p-3 rounded-full w-16 h-16 mb-6 group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                </svg>
               </div>
+              <h3 className="text-xl font-bold text-white mb-3">Deep Analytics</h3>
+              <p className="text-gray-300">Track performance with detailed P&L reports. Understand win ratios, identify patterns, and optimize your trading approach.</p>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
       )}
 
       {/* How It Works Section */}
