@@ -14,9 +14,9 @@ export default function LandingPage() {
           {/* Brand Logo with Glossy Shine */}
     <Link 
   href="#" 
-  className="relative text-3xl font-extrabold bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 bg-clip-text text-transparent drop-shadow-lg overflow-hidden animate-shine-text"
+  className="relative text-3xl font-extrabold bg-gradient-to-r from-gray-200 via-white to-gray-300 bg-clip-text text-transparent overflow-hidden animate-shine-text antialiased subpixel-antialiased"
 >
-  TradeDemos
+  TradingSim
 </Link>          
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
