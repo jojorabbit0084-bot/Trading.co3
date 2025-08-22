@@ -18,16 +18,65 @@ export default function ResetPasswordPage() {
   const supabase = createClient();
 
   useEffect(() => {
-    const accessToken = searchParams.get('access_token');
-    const refreshToken = searchParams.get('refresh_token');
+    // Check for token in URL params
+    const token = searchParams.get('token');
+    const type = searchParams.get('type');
 
-    if (accessToken && refreshToken) {
-      // Supabase automatically handles session from URL tokens
-      // No explicit session setting needed here, just ensure the client is initialized
-    } else {
-      setError('Invalid or missing tokens for password reset.');
+    if (!token || type !== 'recovery') {
+      setError('Invalid reset link. Please request a new one.');
+      setTimeout(() => {
+        router.push('/forgot-password?error=Invalid reset link. Please request a new one.');
+      }, 3000);
+      return;
     }
-  }, [searchParams]);
+
+    // Verify the token with Supabase
+    const verifyToken = async () => {
+      try {
+        // Try to get the current session
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError || !session) {
+          setError('Invalid or expired reset link. Please request a new one.');
+          setTimeout(() => {
+            router.push('/forgot-password?error=Invalid or expired reset link. Please request a new one.');
+          }, 3000);
+        }
+      } catch (error) {
+        setError('An error occurred while verifying the reset link.');
+        setTimeout(() => {
+          router.push('/forgot-password?error=Invalid reset link. Please request a new one.');
+        }, 3000);
+      }
+    };
+
+    verifyToken();
+  }, [searchParams, router, supabase.auth]);
+
+  const validatePassword = (password: string) => {
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    if (password.length < minLength) {
+      return 'Password must be at least 8 characters long';
+    }
+    if (!hasUpperCase) {
+      return 'Password must contain at least one uppercase letter';
+    }
+    if (!hasLowerCase) {
+      return 'Password must contain at least one lowercase letter';
+    }
+    if (!hasNumbers) {
+      return 'Password must contain at least one number';
+    }
+    if (!hasSpecialChar) {
+      return 'Password must contain at least one special character';
+    }
+    return null;
+  };
 
   const handlePasswordReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +86,13 @@ export default function ResetPasswordPage() {
 
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
+      setIsLoading(false);
+      return;
+    }
+
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
       setIsLoading(false);
       return;
     }
@@ -90,22 +146,52 @@ export default function ResetPasswordPage() {
               <input
                 type="password"
                 required
+                minLength={8}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent backdrop-blur-sm transition-all duration-200"
                 placeholder="Enter new password"
               />
+              <div className="mt-2 space-y-1">
+                <p className="text-xs text-gray-400">Password must contain:</p>
+                <ul className="text-xs space-y-1 text-gray-400">
+                  <li className={`flex items-center ${password.length >= 8 ? 'text-success' : ''}`}>
+                    <span className="mr-1">{password.length >= 8 ? '✓' : '•'}</span>
+                    At least 8 characters
+                  </li>
+                  <li className={`flex items-center ${/[A-Z]/.test(password) ? 'text-success' : ''}`}>
+                    <span className="mr-1">{/[A-Z]/.test(password) ? '✓' : '•'}</span>
+                    One uppercase letter
+                  </li>
+                  <li className={`flex items-center ${/[a-z]/.test(password) ? 'text-success' : ''}`}>
+                    <span className="mr-1">{/[a-z]/.test(password) ? '✓' : '•'}</span>
+                    One lowercase letter
+                  </li>
+                  <li className={`flex items-center ${/\d/.test(password) ? 'text-success' : ''}`}>
+                    <span className="mr-1">{/\d/.test(password) ? '✓' : '•'}</span>
+                    One number
+                  </li>
+                  <li className={`flex items-center ${/[!@#$%^&*(),.?":{}|<>]/.test(password) ? 'text-success' : ''}`}>
+                    <span className="mr-1">{/[!@#$%^&*(),.?":{}|<>]/.test(password) ? '✓' : '•'}</span>
+                    One special character
+                  </li>
+                </ul>
+              </div>
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-300 mb-3">Confirm New Password</label>
               <input
                 type="password"
                 required
+                minLength={8}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full px-4 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent backdrop-blur-sm transition-all duration-200"
                 placeholder="Confirm new password"
               />
+              {confirmPassword && password !== confirmPassword && (
+                <p className="mt-2 text-xs text-danger">Passwords do not match</p>
+              )}
             </div>
             <button
               type="submit"
