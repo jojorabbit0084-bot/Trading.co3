@@ -19,13 +19,28 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     const handlePasswordReset = async () => {
+      const hashFragment = window.location.hash;
+      const accessToken = hashFragment.replace('#access_token=', '');
+      
+      if (!accessToken) {
+        setError('Invalid reset link. Please request a new one.');
+        setTimeout(() => {
+          router.push('/forgot-password?error=Invalid reset link');
+        }, 3000);
+        return;
+      }
+
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (!session) {
+        // Set the access token
+        const { error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: ''
+        });
+
+        if (error) {
           setError('Invalid or expired reset link. Please request a new one.');
           setTimeout(() => {
-            router.push('/forgot-password?error=Invalid or expired reset link');
+            router.push('/forgot-password?error=Invalid reset link');
           }, 3000);
         }
       } catch (error) {

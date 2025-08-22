@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, ReactNode } from 'react';
+import { createClient } from '@/utils/supabase/client';
 
 interface LandingPageProps {
   children?: ReactNode;
@@ -20,7 +21,7 @@ export default function LandingPage({ children, user }: LandingPageProps) {
         <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
           {/* Brand Logo with Glossy Shine */}
     <Link 
-  href="#" 
+  href="/" 
   className="relative text-3xl font-extrabold bg-gradient-to-r from-gray-300 via-gray-100 to-gray-400 bg-clip-text text-transparent drop-shadow-lg overflow-hidden animate-shine-text"
 >
   TradeDemos
@@ -34,17 +35,24 @@ export default function LandingPage({ children, user }: LandingPageProps) {
               <>
                 <Link href="/login" className="text-gray-300 hover:text-white transition-colors">Login</Link>
                 <Link href="/signup" className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-semibold px-6 py-2.5 rounded-lg hover:from-primary-600 hover:to-secondary-600 transition-all duration-300 transform hover:scale-105">
-                  Start Trading Free
-                </Link>
-                <Link href="/signup" className="bg-gradient-to-r from-accent-500 to-danger text-white font-semibold px-6 py-2.5 rounded-lg hover:from-accent-600 hover:to-danger-600 transition-all duration-300 transform hover:scale-105">
                   REGISTER
                 </Link>
               </>
             )}
             {user && (
               <div className="flex items-center space-x-4">
-                <span className="text-gray-300">Logged in as: {userName}</span>
-                <Link href="/profile" className="text-gray-300 hover:text-white transition-colors">Edit Profile</Link>
+                <span className="text-gray-300">Welcome, {userName}</span>
+                <Link href="/home" className="text-gray-300 hover:text-white transition-colors">Dashboard</Link>
+                <button
+                  onClick={async () => {
+                    const supabase = createClient();
+                    await supabase.auth.signOut();
+                    window.location.href = '/';
+                  }}
+                  className="bg-gradient-to-r from-danger to-danger-600 text-white font-semibold px-4 py-2 rounded-lg hover:from-danger-600 hover:to-danger-700 transition-all duration-300"
+                >
+                  Logout
+                </button>
               </div>
             )}
           </div>
