@@ -18,40 +18,26 @@ export default function ResetPasswordPage() {
   const supabase = createClient();
 
   useEffect(() => {
-    // Check for token in URL params
-    const token = searchParams.get('token');
-    const type = searchParams.get('type');
-
-    if (!token || type !== 'recovery') {
-      setError('Invalid reset link. Please request a new one.');
-      setTimeout(() => {
-        router.push('/forgot-password?error=Invalid reset link. Please request a new one.');
-      }, 3000);
-      return;
-    }
-
-    // Verify the token with Supabase
-    const verifyToken = async () => {
+    const handlePasswordReset = async () => {
       try {
-        // Try to get the current session
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
         
-        if (sessionError || !session) {
+        if (!session) {
           setError('Invalid or expired reset link. Please request a new one.');
           setTimeout(() => {
-            router.push('/forgot-password?error=Invalid or expired reset link. Please request a new one.');
+            router.push('/forgot-password?error=Invalid or expired reset link');
           }, 3000);
         }
       } catch (error) {
         setError('An error occurred while verifying the reset link.');
         setTimeout(() => {
-          router.push('/forgot-password?error=Invalid reset link. Please request a new one.');
+          router.push('/forgot-password?error=Error verifying reset link');
         }, 3000);
       }
     };
 
-    verifyToken();
-  }, [searchParams, router, supabase.auth]);
+    handlePasswordReset();
+  }, [router, supabase.auth]);
 
   const validatePassword = (password: string) => {
     const minLength = 8;
