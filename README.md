@@ -1,4 +1,4 @@
-# Trading Platform MVP
+# TradingSim Platform
 
 A modern, responsive full-stack trading platform built with Next.js, Supabase, and TailwindCSS. This application provides a complete trading experience with portfolio management, transaction tracking, and real-time analytics.
 
@@ -186,7 +186,7 @@ trading-app/
 
 ### Demo Credentials
 For quick testing, use these demo credentials:
-- **Email:** demo@trading.co
+- **Email:** demo@tradingsim.co
 - **Password:** demo123
 
 ### Features

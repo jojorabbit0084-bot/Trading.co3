@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Trading Co. - Your Investment Platform",
+  title: "TradingSim - Your Investment Platform",
   description: "Professional trading platform with portfolio management, real-time analytics, and secure transactions.",
 };
 

@@ -157,7 +157,7 @@ export default function SignupPage() {
           <div className="max-w-md mx-auto w-full">
             <div className="text-center mb-10">
               <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent mb-6 inline-block">
-                TradeMaster
+                TradingSim
               </Link>
               <h1 className="text-4xl font-bold text-white mb-3">Create Your Account</h1>
               <p className="text-gray-400 text-lg">Start your risk-free trading journey in 60 seconds</p>

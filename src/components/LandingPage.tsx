@@ -404,7 +404,7 @@ export default function LandingPage({ children, user }: LandingPageProps) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
               <h3 className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent mb-4">
-                TradeMaster
+                TradingSim
               </h3>
               <p className="text-gray-400 max-w-md">
                 The ultimate risk-free trading platform for Indian markets. Master F&O trading 
@@ -432,7 +432,7 @@ export default function LandingPage({ children, user }: LandingPageProps) {
           </div>
           <div className="border-t border-white/10 mt-8 pt-8 text-center">
             <p className="text-gray-400">
-              &copy; 2025 TradeMaster. All rights reserved. 
+              &copy; 2025 TradingSim. All rights reserved. 
               <span className="block sm:inline sm:ml-2 text-sm">
                 Virtual trading platform for educational purposes only.
               </span>

@@ -38,14 +38,14 @@ export default function LoginPage() {
   };
 
   const handleDemoLogin = async () => {
-    setEmail('demo@trading.co');
+    setEmail('demo@tradingsim.co');
     setPassword('demo123');
     setIsLoading(true);
     setMessage('');
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
-        email: 'demo@trading.co',
+        email: 'demo@tradingsim.co',
         password: 'demo123',
       });
 
@@ -132,7 +132,7 @@ export default function LoginPage() {
           <div className="max-w-md mx-auto w-full">
             <div className="text-center mb-10">
               <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent mb-6 inline-block">
-                TradeMaster
+                TradingSim
               </Link>
               <h1 className="text-4xl font-bold text-white mb-3">Welcome Back</h1>
               <p className="text-gray-400 text-lg">Sign in to your trading account</p>

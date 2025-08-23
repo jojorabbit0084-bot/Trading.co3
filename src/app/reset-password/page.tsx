@@ -140,7 +140,7 @@ export default function ResetPasswordPage() {
       <div className="max-w-md w-full bg-dark-900 p-8 rounded-xl shadow-lg border border-white/20">
         <div className="text-center mb-8">
           <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent mb-6 inline-block">
-            TradeMaster
+            TradingSim
           </Link>
           <h1 className="text-3xl font-bold text-white mb-2">Set New Password</h1>
           <p className="text-gray-400">Enter your new password below.</p>
