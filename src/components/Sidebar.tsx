@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import UserStatus from './UserStatus';
@@ -22,8 +23,16 @@ export default function Sidebar() {
 
   return (
     <div className="flex flex-col w-64 h-screen px-4 py-8 bg-white border-r">
-      <Link href="/" className="text-3xl font-semibold text-navy hover:opacity-80">
-        Trading Co.
+      <Link href="/" className="flex items-center hover:opacity-80">
+        <div className="relative h-10 w-40">
+          <Image 
+            src="/Logo_TradingSim.png" 
+            alt="TradingDemos Logo"
+            fill
+            style={{ objectFit: 'contain' }}
+            priority
+          />
+        </div>
       </Link>
       <div className="flex flex-col justify-between mt-6 flex-grow">
         <nav>
