@@ -18,41 +18,42 @@ export default function ResetPasswordPage() {
   const supabase = createClient();
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const handlePasswordReset = async () => {
-      const hashFragment = window.location.hash;
-      const accessToken = hashFragment.replace('#access_token=', '');
-      
-      if (!accessToken) {
-        setError('Invalid reset link. Please request a new one.');
-        setTimeout(() => {
-          router.push('/forgot-password?error=Invalid reset link');
-        }, 3000);
-        return;
-      }
-
       try {
-        // Set the access token
-        const { error } = await supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: ''
-        });
-
-        if (error) {
-          setError('Invalid or expired reset link. Please request a new one.');
-          setTimeout(() => {
-            router.push('/forgot-password?error=Invalid reset link');
-          }, 3000);
+        const code = searchParams.get('code');
+        
+        if (!code) {
+          setError('Invalid reset link. Please request a new reset link.');
+          return;
         }
+
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+        if (userError || !user) {
+          // Try to exchange the code for a session
+          const { error: authError } = await supabase.auth.exchangeCodeForSession(code);
+          
+          if (authError) {
+            console.error('Auth error:', authError);
+            setError('Invalid or expired reset link. Please request a new one.');
+            setTimeout(() => {
+              router.push('/forgot-password?error=Invalid or expired reset link');
+            }, 3000);
+            return;
+          }
+        }
+
+        setError(''); // Clear any errors if we get here
       } catch (error) {
-        setError('An error occurred while verifying the reset link.');
-        setTimeout(() => {
-          router.push('/forgot-password?error=Error verifying reset link');
-        }, 3000);
+        console.error('Reset password error:', error);
+        setError('An error occurred. Please try again.');
       }
     };
 
     handlePasswordReset();
-  }, [router, supabase.auth]);
+  }, [searchParams, router, supabase.auth]);
 
   const validatePassword = (password: string) => {
     const minLength = 8;
@@ -99,20 +100,36 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      const { error } = await supabase.auth.updateUser({ password });
-
-      if (error) {
-        setError(error.message);
-      } else {
-        setMessage('Your password has been updated successfully! You can now log in with your new password.');
-        setIsPasswordUpdated(true);
-        // Optionally redirect to login page after a short delay
+      // First ensure we have a valid session
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user) {
+        setError('Your session has expired. Please request a new reset link.');
         setTimeout(() => {
-          router.push('/login?message=Password reset successfully. Please log in.');
+          router.push('/forgot-password');
         }, 3000);
+        return;
+      }
+
+      // Update the password
+      const { error: updateError } = await supabase.auth.updateUser({ password });
+
+      if (updateError) {
+        setError(updateError.message);
+        setIsLoading(false);
+      } else {
+        setMessage('Password updated successfully!');
+        setIsPasswordUpdated(true);
+        
+        // Sign out and redirect to login
+        await supabase.auth.signOut();
+        
+        setTimeout(() => {
+          router.push('/login?message=Password reset successful. Please login with your new password.');
+        }, 2000);
       }
     } catch (err: any) {
-      setError('An unexpected error occurred: ' + err.message);
+      setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }

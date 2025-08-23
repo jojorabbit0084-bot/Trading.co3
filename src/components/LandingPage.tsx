@@ -15,6 +15,16 @@ export default function LandingPage({ children, user }: LandingPageProps) {
 
   const userName = user?.user_metadata?.full_name || user?.email;
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // If section not found on current page, redirect to landing page with section hash
+      window.location.href = `/#${sectionId}`;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-dark text-white">
       {/* Header */}
@@ -34,9 +44,24 @@ export default function LandingPage({ children, user }: LandingPageProps) {
     </Link>
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-gray-300 hover:text-white transition-colors">Features</a>
-            <a href="#how-it-works" className="text-gray-300 hover:text-white transition-colors">How It Works</a>
-            <a href="#testimonials" className="text-gray-300 hover:text-white transition-colors">Reviews</a>
+            <button 
+              onClick={() => scrollToSection('features')}
+              className="text-gray-300 hover:text-white transition-colors"
+            >
+              Features
+            </button>
+            <button 
+              onClick={() => scrollToSection('how-it-works')}
+              className="text-gray-300 hover:text-white transition-colors"
+            >
+              How It Works
+            </button>
+            <button 
+              onClick={() => scrollToSection('testimonials')}
+              className="text-gray-300 hover:text-white transition-colors"
+            >
+              Reviews
+            </button>
             {!user && (
               <>
                 <Link href="/login" className="text-gray-300 hover:text-white transition-colors">Login</Link>
@@ -78,9 +103,24 @@ export default function LandingPage({ children, user }: LandingPageProps) {
         {isMenuOpen && (
           <div className="md:hidden bg-dark-900/95 backdrop-blur-md border-t border-white/20">
             <div className="px-6 py-4 space-y-4">
-              <a href="#features" className="block text-gray-300 hover:text-white transition-colors">Features</a>
-              <a href="#how-it-works" className="block text-gray-300 hover:text-white transition-colors">How It Works</a>
-              <a href="#testimonials" className="block text-gray-300 hover:text-white transition-colors">Reviews</a>
+              <button 
+                onClick={() => scrollToSection('features')}
+                className="block w-full text-left text-gray-300 hover:text-white transition-colors"
+              >
+                Features
+              </button>
+              <button 
+                onClick={() => scrollToSection('how-it-works')}
+                className="block w-full text-left text-gray-300 hover:text-white transition-colors"
+              >
+                How It Works
+              </button>
+              <button 
+                onClick={() => scrollToSection('testimonials')}
+                className="block w-full text-left text-gray-300 hover:text-white transition-colors"
+              >
+                Reviews
+              </button>
               {!user && (
                 <>
                   <Link href="/login" className="block text-gray-300 hover:text-white transition-colors">Login</Link>
