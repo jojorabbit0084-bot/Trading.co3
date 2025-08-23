@@ -90,7 +90,7 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen bg-gradient-dark text-white">
       <div className="absolute top-4 left-4">
-        <Link href="/home">
+        <Link href="/">
           <Image
             src="/Logo_TradingSim.png"
             alt="TradingSim Logo"

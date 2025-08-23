@@ -38,7 +38,7 @@ export default function LandingPage({ children }: LandingPageProps) {
       <header className="bg-white/10 backdrop-blur-md sticky top-0 z-50 border-b border-white/20">
         <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
           {/* Brand Logo with Glossy Shine */}
-          <Link href={user ? '/home' : '/'} className="flex items-center">
+          <Link href="/" className="flex items-center">
             <div className="relative h-10 w-40">
               <Image 
                 src="/Logo_TradingSim.png" 
