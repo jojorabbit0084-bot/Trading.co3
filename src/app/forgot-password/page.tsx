@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { getAbsoluteURL } from '@/utils/url';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -43,6 +44,18 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen bg-gradient-dark text-white">
+      <div className="absolute top-4 left-4">
+        <Link href="/home">
+          <Image
+            src="/Logo_TradingSim.png"
+            alt="TradingSim Logo"
+            width={180}
+            height={40}
+            priority
+            className="cursor-pointer"
+          />
+        </Link>
+      </div>
       <div className="flex min-h-screen">
         {/* Left Panel - Help & Security Info */}
         <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-accent-600 via-primary-600 to-secondary-600 p-12 flex-col justify-center relative overflow-hidden">

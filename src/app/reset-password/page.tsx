@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState('');
@@ -125,7 +126,7 @@ export default function ResetPasswordPage() {
         await supabase.auth.signOut();
         
         setTimeout(() => {
-          router.push('/login?message=Password reset successful. Please login with your new password.');
+          router.push('/login');
         }, 2000);
       }
     } catch (err: any) {
@@ -136,8 +137,21 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-dark text-white flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-dark-900 p-8 rounded-xl shadow-lg border border-white/20">
+    <div className="min-h-screen bg-gradient-dark text-white">
+      <div className="absolute top-4 left-4">
+        <Link href="/">
+          <Image
+            src="/Logo_TradingSim.png"
+            alt="TradingSim Logo"
+            width={180}
+            height={40}
+            priority
+            className="cursor-pointer"
+          />
+        </Link>
+      </div>
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="max-w-md w-full bg-dark-900 p-8 rounded-xl shadow-lg border border-white/20">
         <div className="text-center mb-8">
           <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent mb-6 inline-block">
             TradingSim
@@ -242,6 +256,7 @@ export default function ResetPasswordPage() {
           </Link>
         </div>
       </div>
+    </div>
     </div>
   );
 }

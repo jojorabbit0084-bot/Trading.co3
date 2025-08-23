@@ -3,16 +3,17 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, ReactNode } from 'react';
+import { useUser } from '@/utils/UserContext';
 import { createClient } from '@/utils/supabase/client';
 
 interface LandingPageProps {
   children?: ReactNode;
-  user?: any; // Add user prop
 }
 
-export default function LandingPage({ children, user }: LandingPageProps) {
+export default function LandingPage({ children }: LandingPageProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const { user } = useUser();
+  
   const userName = user?.user_metadata?.full_name || user?.email;
 
   const scrollToSection = (sectionId: string) => {
@@ -25,23 +26,29 @@ export default function LandingPage({ children, user }: LandingPageProps) {
     }
   };
 
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    window.location.href = '/';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-dark text-white">
       {/* Header */}
       <header className="bg-white/10 backdrop-blur-md sticky top-0 z-50 border-b border-white/20">
         <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
           {/* Brand Logo with Glossy Shine */}
-    <Link href="/" className="flex items-center">
-      <div className="relative h-10 w-40">
-        <Image 
-          src="/Logo_TradingSim.png" 
-          alt="TradingDemos Logo"
-          fill
-          style={{ objectFit: 'contain' }}
-          priority
-        />
-      </div>
-    </Link>
+          <Link href={user ? '/home' : '/'} className="flex items-center">
+            <div className="relative h-10 w-40">
+              <Image 
+                src="/Logo_TradingSim.png" 
+                alt="TradingSim Logo"
+                fill
+                style={{ objectFit: 'contain' }}
+                priority
+              />
+            </div>
+          </Link>
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <button 

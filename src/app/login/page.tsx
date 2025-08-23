@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
@@ -28,7 +29,7 @@ export default function LoginPage() {
       if (error) {
         setMessage(error.message);
       } else {
-        router.push('/');
+        router.push('/home');
       }
     } catch (error) {
       setMessage('An error occurred during login');
@@ -63,6 +64,18 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-dark text-white">
+      <div className="absolute top-4 left-4">
+        <Link href="/">
+          <Image
+            src="/Logo_TradingSim.png"
+            alt="TradingSim Logo"
+            width={180}
+            height={40}
+            priority
+            className="cursor-pointer"
+          />
+        </Link>
+      </div>
       <div className="flex min-h-screen">
         {/* Left Panel - Marketing Content */}
         <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-secondary-600 via-primary-600 to-accent-600 p-12 flex-col justify-center relative overflow-hidden">
@@ -131,7 +144,7 @@ export default function LoginPage() {
         <div className="w-full lg:w-1/2 p-8 lg:p-12 bg-dark-900 flex items-center">
           <div className="max-w-md mx-auto w-full">
             <div className="text-center mb-10">
-              <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent mb-6 inline-block">
+              <Link href="/home" className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent mb-6 inline-block">
                 TradingSim
               </Link>
               <h1 className="text-4xl font-bold text-white mb-3">Welcome Back</h1>

@@ -1,25 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { createClient } from '@/utils/supabase/client';
+import { useEffect } from 'react';
 import LandingPage from '@/components/LandingPage';
-import Sidebar from '@/components/Sidebar';
-import { PortfolioChart, AllocationChart } from '@/components/Charts';
+import { useUser } from '@/utils/UserContext';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const { user, loading } = useUser();
+  const router = useRouter();
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      setLoading(false);
-    };
-
-    getUser();
-  }, [supabase.auth]);
+    if (!loading && user) {
+      router.replace('/home');
+    }
+  }, [user, loading, router]);
 
   if (loading) {
     return (
@@ -41,7 +35,7 @@ export default function HomePage() {
   const userName = user.user_metadata?.full_name || user.email;
 
   return (
-    <LandingPage user={user}>
+    <LandingPage>
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-150px)] text-white text-center px-6">
         <h1 className="text-4xl md:text-5xl font-extrabold leading-tight mb-6 bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent animate-fade-in">
           Welcome, {userName}!
