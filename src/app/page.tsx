@@ -3,17 +3,18 @@
 import { useEffect } from 'react';
 import LandingPage from '@/components/LandingPage';
 import { useUser } from '@/utils/UserContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function HomePage() {
   const { user, loading } = useUser();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (!loading && user) {
+    if (!loading && user && pathname === '/') {
       router.replace('/home');
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, pathname]);
 
   if (loading) {
     return (

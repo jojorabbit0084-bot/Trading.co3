@@ -78,7 +78,7 @@ export default function SignupPage() {
       if (error) {
         setMessage(error.message);
       } else {
-        setMessage('Welcome aboard! Please check your email to confirm your account and start trading.');
+        router.replace('/home'); // Redirect to home after successful signup
       }
     } catch (error) {
       setMessage('An error occurred during signup');

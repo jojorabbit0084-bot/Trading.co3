@@ -29,7 +29,7 @@ export default function LoginPage() {
       if (error) {
         setMessage(error.message);
       } else {
-        router.push('/home');
+        router.replace('/home');
       }
     } catch (error) {
       setMessage('An error occurred during login');
@@ -53,7 +53,7 @@ export default function LoginPage() {
       if (error) {
         setMessage(error.message);
       } else {
-        router.push('/');
+        router.replace('/home');
       }
     } catch (error) {
       setMessage('Demo login failed');
