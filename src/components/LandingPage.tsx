@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useState, ReactNode } from 'react';
 import { useUser } from '@/utils/UserContext';
 import { createClient } from '@/utils/supabase/client';
+import TestimonialSlider from './TestimonialSlider';
 
 interface LandingPageProps {
   children?: ReactNode;
@@ -297,77 +298,7 @@ export default function LandingPage({ children }: LandingPageProps) {
       {/* Testimonials Section */}
       {!children && (
         <section id="testimonials" className="py-20 bg-dark-800/50">
-          <div className="container mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold mb-4">
-                What <span className="text-accent-400">Traders</span> Are Saying
-              </h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {/* Testimonial 1 */}
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20">
-                <div className="flex mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-gray-300 mb-6">"This platform saved me from losing my real money. I tested my options strategies here first and discovered my mistakes before going live."</p>
-                <div className="flex items-center">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center font-bold text-white mr-4">
-                    AS
-                  </div>
-                  <div>
-                    <p className="font-bold text-white">Arjun Sharma</p>
-                    <p className="text-sm text-gray-400">Options Trader, Mumbai</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Testimonial 2 */}
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20">
-                <div className="flex mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-gray-300 mb-6">"Finally, a demo platform focused on Indian markets! The real-time data makes practice feel authentic. My confidence has skyrocketed."</p>
-                <div className="flex items-center">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-secondary-500 to-accent-500 flex items-center justify-center font-bold text-white mr-4">
-                    PV
-                  </div>
-                  <div>
-                    <p className="font-bold text-white">Priya Verma</p>
-                    <p className="text-sm text-gray-400">Day Trader, Delhi</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Testimonial 3 */}
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20">
-                <div className="flex mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-accent-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-gray-300 mb-6">"Clean interface, fast execution, and detailed analytics. This is exactly what I needed to perfect my swing trading strategies."</p>
-                <div className="flex items-center">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-accent-500 to-primary-600 flex items-center justify-center font-bold text-white mr-4">
-                    RK
-                  </div>
-                  <div>
-                    <p className="font-bold text-white">Rohit Kumar</p>
-                    <p className="text-sm text-gray-400">Software Engineer, Bangalore</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <TestimonialSlider />
         </section>
       )}
 
