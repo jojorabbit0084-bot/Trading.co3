@@ -58,6 +58,7 @@ const config: Config = {
         'gradient-secondary': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
         'gradient-dark': 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
         'gradient-hero': 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+        'gradient-radial': 'radial-gradient(circle, var(--tw-gradient-stops))',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',

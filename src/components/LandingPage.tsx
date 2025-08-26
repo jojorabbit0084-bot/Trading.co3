@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, ReactNode } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import { useUser } from '@/utils/UserContext';
 import { createClient } from '@/utils/supabase/client';
 import TestimonialSlider from './TestimonialSlider';
+import { UserPlus, Wallet, TrendingUp } from 'lucide-react';
 
 interface LandingPageProps {
   children?: ReactNode;
@@ -13,14 +14,46 @@ interface LandingPageProps {
 
 export default function LandingPage({ children }: LandingPageProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('hero'); // Default to hero section
   const { user } = useUser();
   
   const userName = user?.user_metadata?.full_name || user?.email;
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.5 } // Adjust as needed
+    );
+
+    const sections = ['hero', 'features', 'how-it-works', 'testimonials', 'final-cta'];
+    sections.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) {
+        observer.observe(element);
+      }
+    });
+
+    return () => {
+      sections.forEach((id) => {
+        const element = document.getElementById(id);
+        if (element) {
+          observer.unobserve(element);
+        }
+      });
+    };
+  }, []);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+      setActiveSection(sectionId); // Update active section immediately on click
     } else {
       // If section not found on current page, redirect to landing page with section hash
       window.location.href = `/#${sectionId}`;
@@ -54,25 +87,25 @@ export default function LandingPage({ children }: LandingPageProps) {
           <div className="hidden md:flex items-center space-x-8">
             <button 
               onClick={() => scrollToSection('features')}
-              className="text-gray-300 hover:text-white transition-colors"
+              className={`text-gray-300 hover:text-white transition-colors ${activeSection === 'features' ? 'glow' : ''}`}
             >
               Features
             </button>
             <button 
               onClick={() => scrollToSection('how-it-works')}
-              className="text-gray-300 hover:text-white transition-colors"
+              className={`text-gray-300 hover:text-white transition-colors ${activeSection === 'how-it-works' ? 'glow' : ''}`}
             >
               How It Works
             </button>
             <button 
               onClick={() => scrollToSection('testimonials')}
-              className="text-gray-300 hover:text-white transition-colors"
+              className={`text-gray-300 hover:text-white transition-colors ${activeSection === 'testimonials' ? 'glow' : ''}`}
             >
               Reviews
             </button>
             {!user && (
               <>
-                <Link href="/login" className="text-gray-300 hover:text-white transition-colors">Login</Link>
+                <Link href="/login" className={`text-gray-300 hover:text-white transition-colors ${activeSection === 'login' ? 'glow' : ''}`}>Login</Link>
                 <Link href="/signup" className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-semibold px-6 py-2.5 rounded-lg hover:from-primary-600 hover:to-secondary-600 transition-all duration-300 transform hover:scale-105">
                   REGISTER
                 </Link>
@@ -158,7 +191,7 @@ export default function LandingPage({ children }: LandingPageProps) {
       ) : (
         <main className="relative">
           <div className="absolute inset-0 bg-gradient-hero opacity-20"></div>
-          <section className="relative container mx-auto px-6 py-20 md:py-32 text-center">
+          <section id="hero" className="relative container mx-auto px-6 py-20 md:py-32 text-center">
             <div className="max-w-5xl mx-auto animate-fade-in">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6">
                 Stop Losing Money. <br className="hidden md:block" />
@@ -174,7 +207,7 @@ export default function LandingPage({ children }: LandingPageProps) {
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link 
                   href="/signup" 
-                  className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-bold text-lg px-8 py-4 rounded-lg hover:from-primary-600 hover:to-secondary-600 transition-all duration-300 transform hover:scale-105 shadow-lg animate-bounce-subtle"
+                  className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-bold text-lg px-8 py-4 rounded-lg hover:from-primary-600 hover:to-secondary-600 transition-all duration-300 transform hover:scale-105 shadow-lg animate-bounce-subtle glow"
                 >
                   Pre-register for Free ₹10L Demo Account
                 </Link>
@@ -185,15 +218,19 @@ export default function LandingPage({ children }: LandingPageProps) {
                   Already Trading? Login
                 </Link>
               </div>
-              <p className="mt-4 text-sm text-gray-400">No credit card required. Start trading in 60 seconds.</p>
+              <p className="mt-4 text-sm text-gray-300">No credit card required. Start trading in 60 seconds.</p>
             </div>
           </section>
         </main>
       )}
 
+      {!children && (
+        <div className="bg-gradient-to-r from-gray-800 to-gray-700 h-px my-16"></div>
+      )}
+
       {/* Features Section */}
       {!children && (
-        <section id="features" className="py-20 bg-dark-800/50">
+        <section id="features" className="py-20 bg-gradient-radial from-gray-900 via-black to-gray-950">
           <div className="container mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-5xl font-bold mb-4">
@@ -206,7 +243,7 @@ export default function LandingPage({ children }: LandingPageProps) {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {/* Feature 1 */}
-              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
+              <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group hover:translate-y-1 hover:shadow-xl">
                 <div className="bg-gradient-to-br from-primary-500 to-secondary-500 p-3 rounded-full w-16 h-16 mb-6 group-hover:scale-110 transition-transform duration-300">
                   <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -217,7 +254,7 @@ export default function LandingPage({ children }: LandingPageProps) {
               </div>
 
             {/* Feature 2 */}
-            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
+            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group hover:translate-y-1 hover:shadow-xl">
               <div className="bg-gradient-to-br from-success to-accent-500 p-3 rounded-full w-16 h-16 mb-6 group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -228,18 +265,18 @@ export default function LandingPage({ children }: LandingPageProps) {
             </div>
 
             {/* Feature 3 */}
-            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
+            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group hover:translate-y-1 hover:shadow-xl">
               <div className="bg-gradient-to-br from-secondary-500 to-primary-600 p-3 rounded-full w-16 h-16 mb-6 group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.172V5L8 4z" />
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Advanced Strategy Testing</h3>
-              <p className="text-gray-300">From simple calls/puts to complex spreads, straddles, and iron condors. Test everything before deploying real capital.</p>
-            </div>
+                <p className="text-gray-300">From simple calls/puts to complex spreads, straddles, and iron condors. Test everything before deploying real capital.</p>
+              </div>
 
             {/* Feature 4 */}
-            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group">
+            <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 hover:bg-white/15 transition-all duration-300 group hover:translate-y-1 hover:shadow-xl">
               <div className="bg-gradient-to-br from-accent-500 to-danger p-3 rounded-full w-16 h-16 mb-6 group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
@@ -251,7 +288,11 @@ export default function LandingPage({ children }: LandingPageProps) {
             </div>
           </div>
         </div>
-      </section>
+        </section>
+      )}
+
+      {!children && (
+        <div className="bg-gradient-to-r from-gray-800 to-gray-700 h-px my-16"></div>
       )}
 
       {/* How It Works Section */}
@@ -265,27 +306,27 @@ export default function LandingPage({ children }: LandingPageProps) {
             </div>
             <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16">
               {/* Step 1 */}
-              <div className="text-center max-w-xs animate-slide-up">
+              <div className="text-center max-w-xs animate-slide-up bg-white/5 border border-white/10 p-8 rounded-xl hover:translate-y-1 hover:shadow-lg transition-all duration-300">
                 <div className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white text-2xl font-bold w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                  1
+                  <UserPlus className="w-10 h-10" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">Create Free Account</h3>
                 <p className="text-gray-300">Quick signup with just your email. No credit card, no hidden fees, no commitments.</p>
               </div>
               
               {/* Step 2 */}
-              <div className="text-center max-w-xs animate-slide-up">
+              <div className="text-center max-w-xs animate-slide-up bg-white/5 border border-white/10 p-8 rounded-xl hover:translate-y-1 hover:shadow-lg transition-all duration-300">
                 <div className="bg-gradient-to-r from-secondary-500 to-accent-500 text-white text-2xl font-bold w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                  2
+                  <Wallet className="w-10 h-10" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">Get ₹10L Virtual Funds</h3>
                 <p className="text-gray-300">Your account is instantly loaded with virtual capital to start trading immediately.</p>
               </div>
               
               {/* Step 3 */}
-              <div className="text-center max-w-xs animate-slide-up">
+              <div className="text-center max-w-xs animate-slide-up bg-white/5 border border-white/10 p-8 rounded-xl hover:translate-y-1 hover:shadow-lg transition-all duration-300">
                 <div className="bg-gradient-to-r from-accent-500 to-danger text-white text-2xl font-bold w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                  3
+                  <TrendingUp className="w-10 h-10" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">Trade Like a Pro</h3>
                 <p className="text-gray-300">Place trades, manage risk, and build confidence with real market data—risk-free.</p>
@@ -295,16 +336,24 @@ export default function LandingPage({ children }: LandingPageProps) {
         </section>
       )}
 
+      {!children && (
+        <div className="bg-gradient-to-r from-gray-800 to-gray-700 h-px my-16"></div>
+      )}
+
       {/* Testimonials Section */}
       {!children && (
-        <section id="testimonials" className="py-20 bg-dark-800/50">
+        <section id="testimonials" className="py-20 bg-gradient-radial from-gray-900 via-black to-gray-950">
           <TestimonialSlider />
         </section>
       )}
 
+      {!children && (
+        <div className="bg-gradient-to-r from-gray-800 to-gray-700 h-px my-16"></div>
+      )}
+
       {/* Final CTA Section */}
       {!children && (
-        <section className="py-20">
+        <section id="final-cta" className="py-20 bg-gradient-to-r from-primary-500 to-secondary-500 animate-background-flow">
           <div className="container mx-auto px-6 text-center">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-3xl md:text-5xl font-bold mb-6">
@@ -317,7 +366,7 @@ export default function LandingPage({ children }: LandingPageProps) {
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link 
                   href="/signup" 
-                  className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-bold text-lg px-8 py-4 rounded-lg hover:from-primary-600 hover:to-secondary-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                  className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-bold text-lg px-8 py-4 rounded-lg hover:from-primary-600 hover:to-secondary-600 transition-all duration-300 transform hover:scale-105 shadow-lg glow"
                 >
                   Claim Your Free ₹10L Demo Now
                 </Link>
@@ -328,7 +377,7 @@ export default function LandingPage({ children }: LandingPageProps) {
                   Existing User? Login
                 </Link>
               </div>
-              <p className="mt-6 text-sm text-gray-400">
+              <p className="mt-6 text-sm text-gray-300">
                 Join 10,000+ traders who are already practicing risk-free. No credit card required.
               </p>
             </div>
@@ -344,14 +393,14 @@ export default function LandingPage({ children }: LandingPageProps) {
               <h3 className="text-2xl font-bold bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent mb-4">
                 TradingSim
               </h3>
-              <p className="text-gray-400 max-w-md">
+              <p className="text-gray-300 max-w-md">
                 The ultimate risk-free trading platform for Indian markets. Master F&O trading 
                 with virtual funds and real-time data.
               </p>
             </div>
             <div>
               <h4 className="font-semibold text-white mb-4">Platform</h4>
-              <ul className="space-y-2 text-gray-400">
+              <ul className="space-y-2 text-gray-300">
                 <li><Link href="/signup" className="hover:text-white transition-colors">Sign Up</Link></li>
                 <li><Link href="/login" className="hover:text-white transition-colors">Login</Link></li>
                 <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
@@ -360,7 +409,7 @@ export default function LandingPage({ children }: LandingPageProps) {
             </div>
             <div>
               <h4 className="font-semibold text-white mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-400">
+              <ul className="space-y-2 text-gray-300">
                 <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Trading Guides</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
@@ -369,7 +418,7 @@ export default function LandingPage({ children }: LandingPageProps) {
             </div>
           </div>
           <div className="border-t border-white/10 mt-8 pt-8 text-center">
-            <p className="text-gray-400">
+            <p className="text-gray-300">
               &copy; 2025 TradingSim. All rights reserved. 
               <span className="block sm:inline sm:ml-2 text-sm">
                 Virtual trading platform for educational purposes only.
