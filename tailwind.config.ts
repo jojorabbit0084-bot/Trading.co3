@@ -64,6 +64,8 @@ const config: Config = {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-out',
         'bounce-subtle': 'bounceSubtle 2s infinite',
+        'gradient-flow': 'gradientFlow 15s ease infinite',
+        'tilt-glow': 'tiltGlow 4s ease-in-out infinite alternate',
       },
       keyframes: {
         fadeIn: {
@@ -77,6 +79,16 @@ const config: Config = {
         bounceSubtle: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-5px)' },
+        },
+        gradientFlow: {
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
+        tiltGlow: {
+          '0%': { transform: 'rotateX(0deg) rotateY(0deg) scale(1)', boxShadow: '0 0 15px rgba(var(--accent-500), 0.4)' },
+          '50%': { transform: 'rotateX(5deg) rotateY(5deg) scale(1.02)', boxShadow: '0 0 25px rgba(var(--accent-500), 0.6), 0 0 40px rgba(var(--secondary-500), 0.3)' },
+          '100%': { transform: 'rotateX(0deg) rotateY(0deg) scale(1)', boxShadow: '0 0 15px rgba(var(--accent-500), 0.4)' },
         },
       },
       backdropBlur: {

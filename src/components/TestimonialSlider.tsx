@@ -5,31 +5,17 @@ import { Star } from 'lucide-react';
 const TestimonialSlider: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const [enableAutoSlide, setEnableAutoSlide] = useState(true); // New state for user toggle
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    const handleChange = () => {
-      setPrefersReducedMotion(mediaQuery.matches);
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    // Auto-slide only if not paused, not prefersReducedMotion, and enableAutoSlide is true
-    if (!isPaused && enableAutoSlide && !prefersReducedMotion) {
+    // Auto-slide always unless paused by user interaction
+    if (!isPaused) {
       interval = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
-      }, 3000); // Auto-slide every 3 seconds
+      }, 1000); // Auto-slide every 1 seconds
     }
     return () => clearInterval(interval);
-  }, [isPaused, enableAutoSlide, prefersReducedMotion]);
+  }, [isPaused]);
 
   const handleMouseEnter = () => setIsPaused(true);
   const handleMouseLeave = () => setIsPaused(false);
@@ -84,6 +70,12 @@ const TestimonialSlider: React.FC = () => {
                   />
                 ))}
               </div>
+              {/* Avatar - Reverted to initials */}
+              <div className="flex justify-center mb-4">
+                <div className="w-16 h-16 rounded-full bg-primary-500 flex items-center justify-center text-xl font-bold text-white border-2 border-primary-300 shadow-lg">
+                  {testimonial.name.substring(0, 2).toUpperCase()}
+                </div>
+              </div>
               <p className="text-lg text-gray-300 mb-4 italic leading-relaxed">"{testimonial.text}"</p>
               <p className="font-bold text-white text-xl">{testimonial.name}</p>
               <p className="text-sm text-gray-300">{testimonial.professionOrLocation}</p>
@@ -102,19 +94,6 @@ const TestimonialSlider: React.FC = () => {
             ))}
           </div>
         </div>
-        {prefersReducedMotion && (
-          <div className="text-center mt-4">
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                className="form-checkbox h-5 w-5 text-primary-500"
-                checked={enableAutoSlide}
-                onChange={() => setEnableAutoSlide(!enableAutoSlide)}
-              />
-              <span className="ml-2 text-gray-300">Enable Auto-Slide (Motion Preference Override)</span>
-            </label>
-          </div>
-        )}
       </div>
     </section>
   );
