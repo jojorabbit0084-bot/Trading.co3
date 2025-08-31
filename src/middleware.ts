@@ -1,8 +1,23 @@
-import { type NextRequest } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import { updateSession } from '@/utils/supabase/middleware'
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request)
+  const { response, user } = await updateSession(request)
+
+  // If the user is authenticated and trying to access login or signup, redirect to home
+  if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup')) {
+    return NextResponse.redirect(new URL('/home', request.url))
+  }
+
+  // If the user is not authenticated and trying to access a protected route (e.g., /home), redirect to login
+  const protectedRoutes = ['/home', '/profile', '/investments', '/transactions']; // Add other protected routes here
+  const isProtectedRoute = protectedRoutes.some(route => request.nextUrl.pathname.startsWith(route));
+
+  if (!user && isProtectedRoute) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  return response
 }
 
 export const config = {

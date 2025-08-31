@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -92,6 +92,32 @@ export default function SignupPage() {
       setIsLoading(false);
     }
   };
+
+  const handleGoogleSignIn = async (response: any) => {
+    setIsLoading(true);
+    setMessage('');
+    try {
+      const { data, error } = await supabase.auth.signInWithIdToken({
+        provider: 'google',
+        token: response.credential,
+      });
+
+      if (error) {
+        setMessage(error.message);
+      } else {
+        router.replace('/home');
+      }
+    } catch (error) {
+      setMessage('An error occurred during Google One Tap signup');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // Expose handleGoogleSignIn to the window object for Google One Tap callback
+    (window as any).handleGoogleSignIn = handleGoogleSignIn;
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-dark text-white">
@@ -197,6 +223,25 @@ export default function SignupPage() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              <button
+                type="button"
+                onClick={() => supabase.auth.signInWithOAuth({ provider: 'google' })}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-4 px-6 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-dark-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 shadow-lg mb-4"
+              >
+                <Image src="/google.svg" alt="Google Logo" width={24} height={24} className="mr-3" />
+                Sign Up Using Google
+              </button>
+
+              <div className="relative flex items-center justify-center my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-white/10"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="bg-dark-900 px-4 text-gray-400">Or continue with</span>
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-semibold text-gray-300 mb-3">Full Name</label>
                 <input

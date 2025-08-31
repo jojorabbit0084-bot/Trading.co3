@@ -26,7 +26,31 @@ function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const handleGoogleSignIn = async (response: any) => {
+    setIsLoading(true);
+    setMessage('');
+    try {
+      const { data, error } = await supabase.auth.signInWithIdToken({
+        provider: 'google',
+        token: response.credential,
+      });
+
+      if (error) {
+        setMessage(error.message);
+      } else {
+        router.replace('/home');
+      }
+    } catch (error) {
+      setMessage('An error occurred during Google One Tap login');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
+    // Expose handleGoogleSignIn to the window object for Google One Tap callback
+    (window as any).handleGoogleSignIn = handleGoogleSignIn;
+
     // Check for email verification
     const type = searchParams.get('type');
     const error = searchParams.get('error_description');
@@ -192,15 +216,15 @@ function LoginContent() {
                   )}
                   <p className="text-sm font-medium">{notification.message}</p>
                 </div>
-                <button 
-                  onClick={handleDismissNotification}
-                  className="text-gray-400 hover:text-gray-200 transition-colors"
-                  aria-label="Dismiss notification"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+              <button
+                type="button"
+                onClick={() => supabase.auth.signInWithOAuth({ provider: 'google' })}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-4 px-6 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-dark-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 shadow-lg mb-4"
+              >
+                <Image src="/google.svg" alt="Google Logo" width={24} height={24} className="mr-3" />
+                Sign In Using Google
+              </button>
               </div>
             )}
 
@@ -233,6 +257,25 @@ function LoginContent() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              <button
+                type="button"
+                onClick={() => supabase.auth.signInWithOAuth({ provider: 'google' })}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg py-4 px-6 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-dark-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 shadow-lg mb-4"
+              >
+                <Image src="/google.svg" alt="Google Logo" width={24} height={24} className="mr-3" />
+                Sign In Using Google
+              </button>
+
+              <div className="relative flex items-center justify-center my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-white/10"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="bg-dark-900 px-4 text-gray-400">Or continue with</span>
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-semibold text-gray-300 mb-3">Email Address</label>
                 <input
