@@ -37,11 +37,13 @@ function LoginContent() {
 
       if (error) {
         setMessage(error.message);
+        console.error('Google One Tap Login Error:', error); // Added detailed logging
       } else {
         router.replace('/home');
       }
-    } catch (error) {
+    } catch (error: any) { // Explicitly type error as any for message property
       setMessage('An error occurred during Google One Tap login');
+      console.error('Google One Tap Login Catch Error:', error); // Added detailed logging
     } finally {
       setIsLoading(false);
     }
