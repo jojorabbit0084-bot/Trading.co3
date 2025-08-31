@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -8,6 +8,14 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import MarketInsightCard from '@/components/MarketInsightCard';
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
+  );
+}
+
+function LoginContent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
