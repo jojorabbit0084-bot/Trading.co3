@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import MarketInsightCard from '@/components/MarketInsightCard';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -12,8 +13,36 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const supabase = createClient();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // Check for email verification
+    const type = searchParams.get('type');
+    const error = searchParams.get('error_description');
+    const activated = searchParams.get('activated');
+
+    if ((type === 'signup' && !error) || activated === 'true') {
+      setNotification({ 
+        message: 'Your account has been successfully activated! You can now log in.', 
+        type: 'success' 
+      });
+      // Clear the query parameter
+      router.replace('/login');
+
+      // Auto-dismiss after 5 seconds
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams, router]);
+
+  const handleDismissNotification = () => {
+    setNotification(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,17 +155,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20">
-              <h4 className="text-lg font-semibold text-white mb-3">📈 Today's Market Insight</h4>
-              <p className="text-gray-200 text-sm mb-2">
-                NIFTY is showing strong bullish momentum. Perfect time to test your options strategies!
-              </p>
-              <div className="flex items-center space-x-4 text-sm">
-                <span className="text-success">NIFTY: +1.2%</span>
-                <span className="text-secondary-400">BANKNIFTY: +0.8%</span>
-                <span className="text-accent-400">Volatility: Moderate</span>
-              </div>
-            </div>
+            <MarketInsightCard />
           </div>
         </div>
 
@@ -150,6 +169,32 @@ export default function LoginPage() {
               <h1 className="text-4xl font-bold text-white mb-3">Welcome Back</h1>
               <p className="text-gray-400 text-lg">Sign in to your trading account</p>
             </div>
+
+            {notification && (
+              <div className={`p-4 rounded-xl mb-6 flex items-center justify-between ${
+                notification.type === 'success' 
+                  ? 'bg-success/20 border border-success/50 text-[#98FB98] animate-fade-in' 
+                  : 'bg-danger/20 border border-danger/50 text-danger-200'
+              }`}>
+                <div className="flex items-center space-x-2">
+                  {notification.type === 'success' && (
+                    <svg className="w-5 h-5 text-[#98FB98]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                  <p className="text-sm font-medium">{notification.message}</p>
+                </div>
+                <button 
+                  onClick={handleDismissNotification}
+                  className="text-gray-400 hover:text-gray-200 transition-colors"
+                  aria-label="Dismiss notification"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            )}
 
             {/* Demo Account Banner */}
             <div className="bg-gradient-to-r from-accent-500/20 to-accent-600/20 border border-accent-500/30 rounded-xl p-4 mb-8">

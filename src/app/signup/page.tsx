@@ -78,7 +78,13 @@ export default function SignupPage() {
       if (error) {
         setMessage(error.message);
       } else {
-        router.replace('/home'); // Redirect to home after successful signup
+        setMessage('Registration successful! Please check your email to activate your account.');
+        setEmail('');
+        setPassword('');
+        setName('');
+        setConfirmPassword('');
+        setAgreedToTerms(false);
+        setPasswordStrength(0);
       }
     } catch (error) {
       setMessage('An error occurred during signup');
@@ -177,8 +183,16 @@ export default function SignupPage() {
             </div>
 
             {message && (
-              <div className={`p-4 rounded-xl mb-6 ${message.includes('error') || message.includes('match') || message.includes('stronger') || message.includes('agree') ? 'bg-danger/20 border border-danger/50 text-danger-200' : 'bg-success/20 border border-success/50 text-success-200'}`}>
-                <p className="text-sm">{message}</p>
+              <div className={`p-4 rounded-xl mb-6 ${
+                message.includes('error') || message.includes('match') || message.includes('stronger') || message.includes('agree') 
+                  ? 'bg-danger/20 border border-danger/50 text-danger-200' 
+                  : 'bg-success/20 border border-success/50 text-[#98FB98]'
+              }`}>
+                <p className={`text-sm ${
+                  message.includes('error') || message.includes('match') || message.includes('stronger') || message.includes('agree')
+                    ? 'text-danger-200'
+                    : 'text-[#98FB98]'
+                }`}>{message}</p>
               </div>
             )}
 

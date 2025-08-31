@@ -38,7 +38,10 @@ const config: Config = {
           800: '#92400e',
           900: '#78350f',
         },
-        success: '#10b981',
+        success: {
+          200: '#a7f3d0', // A lighter shade of green for notifications
+          DEFAULT: '#10b981',
+        },
         danger: '#ef4444',
         dark: {
           50: '#f8fafc',
