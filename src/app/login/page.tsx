@@ -33,11 +33,12 @@ function LoginContent() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const handleCredentialResponse = async (event: CustomEvent) => {
+    const handleCredentialResponse = async (event: Event) => {
       setIsLoading(true);
       setMessage('');
       try {
-        const { credential } = event.detail;
+        const customEvent = event as GoogleOneTapCredentialEvent;
+        const { credential } = customEvent.detail;
         const { data, error } = await supabase.auth.signInWithIdToken({
           provider: 'google',
           token: credential,
