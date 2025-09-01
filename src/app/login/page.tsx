@@ -6,12 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import MarketInsightCard from '@/components/MarketInsightCard';
-
-interface GoogleOneTapCredentialEvent extends CustomEvent {
-  detail: {
-    credential: string;
-  };
-}
+import OneTapComponent from '@/components/GoogleOneTap'; // Import the new component
 
 export default function LoginPage() {
   return (
@@ -32,35 +27,8 @@ function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  // Check for email verification
   useEffect(() => {
-    const handleCredentialResponse = async (event: Event) => {
-      setIsLoading(true);
-      setMessage('');
-      try {
-        const customEvent = event as GoogleOneTapCredentialEvent;
-        const { credential } = customEvent.detail;
-        const { data, error } = await supabase.auth.signInWithIdToken({
-          provider: 'google',
-          token: credential,
-        });
-
-        if (error) {
-          setMessage(error.message);
-          console.error('Google One Tap Login Error:', error);
-        } else {
-          router.replace('/home');
-        }
-      } catch (error: any) {
-        setMessage('An error occurred during Google One Tap login');
-        console.error('Google One Tap Login Catch Error:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    window.addEventListener('googleOneTapCredential', handleCredentialResponse as EventListener);
-
-    // Check for email verification
     const type = searchParams.get('type');
     const error = searchParams.get('error_description');
     const activated = searchParams.get('activated');
@@ -79,11 +47,7 @@ function LoginContent() {
       }, 5000);
       return () => clearTimeout(timer);
     }
-
-    return () => {
-      window.removeEventListener('googleOneTapCredential', handleCredentialResponse as EventListener);
-    };
-  }, [searchParams, router, supabase]);
+  }, [searchParams, router]);
 
   const handleDismissNotification = () => {
     setNotification(null);
@@ -268,6 +232,8 @@ function LoginContent() {
                 <p className="text-sm">{message}</p>
               </div>
             )}
+
+            <OneTapComponent /> {/* Render the new Google One Tap component */}
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <button
