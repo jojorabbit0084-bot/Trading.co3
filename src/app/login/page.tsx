@@ -7,6 +7,12 @@ import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import MarketInsightCard from '@/components/MarketInsightCard';
 
+interface GoogleOneTapCredentialEvent extends CustomEvent {
+  detail: {
+    credential: string;
+  };
+}
+
 export default function LoginPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -26,32 +32,32 @@ function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const handleGoogleSignIn = async (response: any) => {
-    setIsLoading(true);
-    setMessage('');
-    try {
-      const { data, error } = await supabase.auth.signInWithIdToken({
-        provider: 'google',
-        token: response.credential,
-      });
-
-      if (error) {
-        setMessage(error.message);
-        console.error('Google One Tap Login Error:', error); // Added detailed logging
-      } else {
-        router.replace('/home');
-      }
-    } catch (error: any) { // Explicitly type error as any for message property
-      setMessage('An error occurred during Google One Tap login');
-      console.error('Google One Tap Login Catch Error:', error); // Added detailed logging
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    // Expose handleGoogleSignIn to the window object for Google One Tap callback
-    (window as any).handleGoogleSignIn = handleGoogleSignIn;
+    const handleCredentialResponse = async (event: CustomEvent) => {
+      setIsLoading(true);
+      setMessage('');
+      try {
+        const { credential } = event.detail;
+        const { data, error } = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: credential,
+        });
+
+        if (error) {
+          setMessage(error.message);
+          console.error('Google One Tap Login Error:', error);
+        } else {
+          router.replace('/home');
+        }
+      } catch (error: any) {
+        setMessage('An error occurred during Google One Tap login');
+        console.error('Google One Tap Login Catch Error:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    window.addEventListener('googleOneTapCredential', handleCredentialResponse as EventListener);
 
     // Check for email verification
     const type = searchParams.get('type');
@@ -72,7 +78,11 @@ function LoginContent() {
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [searchParams, router]);
+
+    return () => {
+      window.removeEventListener('googleOneTapCredential', handleCredentialResponse as EventListener);
+    };
+  }, [searchParams, router, supabase]);
 
   const handleDismissNotification = () => {
     setNotification(null);
