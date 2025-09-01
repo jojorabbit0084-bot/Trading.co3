@@ -73,7 +73,7 @@ export default function ComingSoonPage() {
               <p className="text-gray-300">We're working hard to bring you the best trading experience. Follow us on social media for updates!</p>
               <div className="mt-6 flex justify-center">
                 <a 
-                  href="https://www.instagram.com/profitvision360/" 
+                  href="https://www.instagram.com/tradingsim.in/"
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="flex items-center space-x-2 text-white hover:text-accent-400 transition-colors"
@@ -103,7 +103,7 @@ export default function ComingSoonPage() {
             <p className="text-gray-400">
               © 2025 TradingSim. All rights reserved. 
               <a 
-                href="https://www.instagram.com/profitvision360/" 
+                href="https://www.instagram.com/tradingsim.in/"
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="ml-2 text-accent-400 hover:text-accent-300 transition-colors"
