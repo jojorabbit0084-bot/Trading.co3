@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import MarketInsightCard from '@/components/MarketInsightCard';
-import OneTapComponent from '@/components/GoogleOneTap'; // Import the new component
+// OneTapComponent is now rendered globally in layout.tsx
 
 export default function LoginPage() {
   return (
@@ -232,8 +232,6 @@ function LoginContent() {
                 <p className="text-sm">{message}</p>
               </div>
             )}
-
-            <OneTapComponent /> {/* Render the new Google One Tap component */}
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <button

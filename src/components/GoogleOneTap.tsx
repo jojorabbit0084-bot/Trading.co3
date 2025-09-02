@@ -64,7 +64,7 @@ const OneTapComponent = () => {
           console.error('Error getting session', error)
         }
         if (data.session) {
-          router.push('/')
+          // Do not redirect here. Let middleware handle it.
           return
         }
 
@@ -84,8 +84,7 @@ const OneTapComponent = () => {
               console.log('Session data: ', data)
               console.log('Successfully logged in with Google One Tap')
 
-              // redirect to protected page
-              router.push('/')
+              // Do not redirect here. Let middleware handle it.
             } catch (error) {
               console.error('Error logging in with Google One Tap', error)
             }
@@ -94,7 +93,10 @@ const OneTapComponent = () => {
           // with chrome's removal of third-party cookies, we need to use FedCM instead (https://developers.google.com/identity/gsi/web/guides/fedcm-migration)
           use_fedcm_for_prompt: true, // Re-added as nonce issue was primary blocker
         })
-        google.accounts.id.prompt() // Display the One Tap UI
+        // Only display the One Tap UI if the user is not authenticated
+        if (!data.session) {
+          google.accounts.id.prompt()
+        }
       }
       setupOneTap();
     }

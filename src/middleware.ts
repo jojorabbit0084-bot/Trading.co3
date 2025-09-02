@@ -4,8 +4,8 @@ import { updateSession } from '@/utils/supabase/middleware'
 export async function middleware(request: NextRequest) {
   const { response, user } = await updateSession(request)
 
-  // If the user is authenticated and trying to access login or signup, redirect to home
-  if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup')) {
+  // If the user is authenticated and trying to access login, signup, or the root path, redirect to home
+  if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup' || request.nextUrl.pathname === '/')) {
     return NextResponse.redirect(new URL('/home', request.url))
   }
 

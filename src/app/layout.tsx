@@ -4,6 +4,7 @@ import "./globals.css";
 import { UserProvider } from "@/utils/UserContext";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import OneTapComponent from '@/components/GoogleOneTap'; // Import the OneTapComponent
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +37,7 @@ export default function RootLayout({
         <UserProvider>
           {children}
         </UserProvider>
+        <OneTapComponent /> {/* Render the OneTapComponent globally */}
         <Analytics />
         <SpeedInsights />
       </body>
