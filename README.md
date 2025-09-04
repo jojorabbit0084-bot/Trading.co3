@@ -68,8 +68,7 @@ A modern, responsive full-stack trading platform built with Next.js, Supabase, a
    
    Create a `.env.local` file in the root directory:
    ```env
-   NEXT_PUBLIC_SUPABASE_URL=https://zttnzwloyjpkcetugjtd.supabase.co
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0dG56d2xveWpwa2NldHVnanRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1NzU5OTgsImV4cCI6MjA3MTE1MTk5OH0.w_o3dU_xSxD1GG4xipDCcFnrlv-WnOT2BMctoGdRipw
+
    ```
 
 4. **Database Setup**
